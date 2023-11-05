@@ -13,13 +13,19 @@ io.on('connection', socket => {
     console.log('New connection');
     socket.on('chat.message', data => {
         console.log('message => ', data);
-        io.emit('chat.message', data);
-    })
+        nomeUsuario = data.name;
+        if (!data.name) {
+            nomeUsuario = 'Anônimo';
+        }
+
+        io.emit('chat.message', { name: nomeUsuario, message: data.message });
+    });
+
     socket.on('disconnect', () => {
         console.log('Disconnect => A connection was disconnected');
     });
 });
 
 server.listen(SERVER_PORT, () => {
-    console.log(`[HTTP] Listen => Server is running at http://${SERVER_HOST}:${SERVER_PORT}`)
+    console.log(`[HTTP] Listen => Server is running at http://${SERVER_HOST}:${SERVER_PORT}`);
 });
